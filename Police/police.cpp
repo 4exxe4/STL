@@ -22,7 +22,8 @@ const std::map<int, std::string> VIOLATIONS =
 	{7, "Езда в нетрезвом состоянии"},
 	{8, "Оскорбление офицера"},
 };
-
+class Crime;
+std::stringstream& operator >> (std::stringstream& stream, Crime& obj);
 class Crime
 {
 	int violation;
@@ -48,6 +49,11 @@ public:
 	{
 		set_violation(violation);
 		set_place(place);
+	}
+	explicit Crime(std::string str)
+	{
+		std::stringstream stream (str);
+		stream >> *this;
 	}
 };
 
@@ -144,11 +150,14 @@ std::map<std::string, std::list<Crime>> load(const std::string& filename)
 			cout << all_crimes << endl;
 			const char delimiters[] = ",";
 			for (char* pch = strtok(all_crimes, delimiters); pch; pch = strtok(NULL, delimiters))
+				base[license_plate].push_back(Crime(pch));
 			{
+				/*
 				Crime crime(0, "");
 				std::stringstream stream(pch);
 				stream >> crime;
 				base[license_plate].push_back(crime);
+				*/
 				/*
 				Stringstream - это объект, который хранит строку, но позволяет работать с ней, как с потоком. А именно из строки можно читать различные её элементы, используя операторы перенаправления в поток и потоковую функцию get_line.
 				*/
